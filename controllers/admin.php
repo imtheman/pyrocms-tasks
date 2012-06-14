@@ -1,4 +1,4 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+git remote add origin https://github.com/hughfletcher/Pyrotasks.git<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * This is a sample module for PyroCMS
  *
