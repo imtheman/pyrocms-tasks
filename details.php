@@ -19,11 +19,11 @@ class Module_Tasks extends Module {
             'menu' => 'utilities', // You can also place modules in their top level menu. For example try: 'menu' => 'Sample',
             'sections' => array(
                 'tasks' => array(
-                    'name' => 'tasks:tasks', // These are translated from your language file
+                    'name' => 'tasks_plural', // These are translated from your language file
                     'uri' => 'admin/tasks',
                     'shortcuts' => array(
-                        'create' => array(
-                            'name' => 'tasks:create',
+                        array(
+                            'name' => 'tasks_create',
                             'uri' => 'admin/tasks/create',
                             'class' => 'add'
                         )
@@ -35,6 +35,7 @@ class Module_Tasks extends Module {
 
     public function install() {
         $this->dbforge->drop_table('tasks');
+        $this->load->model('groups/group_m');
 
         $schema = array(
             'id' => array(
@@ -84,12 +85,27 @@ class Module_Tasks extends Module {
             )
         );
 
+        $id_group = $this->group_m->insert(array('name' => 'vendors', 'description' => 'Vendors'));
+
+        $setting = array(
+            'slug' => 'vendor_group',
+            'title' => 'Vendor Group',
+            'description' => '',
+            '`default`' => $id_group,
+            '`value`' => $id_group,
+            'type' => '',
+            'options`' => '',
+            'is_required' => 1,
+            'is_gui' => 0,
+            'module' => 'tasks'
+        );
+
         $this->dbforge->add_field($schema);
         $this->dbforge->add_key('id', TRUE);
         
-        $this->load->model('groups/group_m');
+        
 
-        if ($this->dbforge->create_table('tasks') && $this->group_m->insert(array('name' => 'vendors', 'description' => 'Vendors'))) {
+        if ($this->dbforge->create_table('tasks') && $this->db->insert('settings', $setting)) {
             return TRUE;
         }
     }
